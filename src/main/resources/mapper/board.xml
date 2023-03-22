@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.mybatisdto.model.board.BoardRepository">
+
+    <resultMap id="v3ResultMap" type="shop.mtcoding.mybatisdto.dto.BoardJoinUserDtoV3">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="user" javaType="shop.mtcoding.mybatisdto.dto.BoardJoinUserDtoV3$UserDto">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+            <result property="email" column="email"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+    </resultMap>
+
+    <select id="findByIdJoinUserV3" resultMap="v3ResultMap">
+        select *
+        from board_tb b inner join user_tb u
+        ON b.user_id = u.id
+        WHERE b.id = #{id}
+    </select>
+
+    <resultMap id="v2BoardDto" type="shop.mtcoding.mybatisdto.dto.BoardDto">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+    <resultMap id="v2UserDto" type="shop.mtcoding.mybatisdto.dto.UserDto">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="v2ResultMap" type="shop.mtcoding.mybatisdto.dto.BoardJoinUserDtoV2">
+        <association property="board" resultMap="v2BoardDto" />
+        <association property="user" resultMap="v2UserDto" />
+        <!--<collection property="boards" resultMap="boardDto" />-->
+    </resultMap>
+
+    <select id="findByIdJoinUserV2" resultMap="v2ResultMap">
+        select *
+        from board_tb b inner join user_tb u
+        ON b.user_id = u.id
+        WHERE b.id = #{id}
+    </select>
+
+
+    <select id="findByIdJoinUserV1" resultType="shop.mtcoding.mybatisdto.dto.BoardJoinUserDtoV1Flattern">
+        select b.*,
+               u.id user_id,
+               u.username user_username,
+               u.password user_password,
+               u.email user_email,
+               u.created_at user_created_at
+        from board_tb b inner join user_tb u
+        ON b.user_id = u.id
+        WHERE b.id = #{id}
+    </select>
+</mapper>
